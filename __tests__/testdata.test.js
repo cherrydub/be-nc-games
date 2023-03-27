@@ -18,6 +18,7 @@ describe("getCategories(", () => {
       .get("/api/categories")
       .then(({ body }) => {
         expect(body).toHaveLength(4);
+        expect(body).toBeInstanceOf(Array);
         body.forEach((singleObject) => {
           expect(singleObject).toHaveProperty("slug", expect.any(String));
           expect(singleObject).toHaveProperty(
