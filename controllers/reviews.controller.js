@@ -4,8 +4,8 @@ exports.getReviewById = (req, res, next) => {
   const { review_id } = req.params;
 
   fetchReviewsById(review_id)
-    .then((data) => {
-      res.status(200).send(data);
+    .then((reviewData) => {
+      res.status(200).send({ review: reviewData });
     })
     .catch((err) => {
       next(err);

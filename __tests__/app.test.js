@@ -12,14 +12,26 @@ afterAll(() => {
   return db.end();
 });
 
+describe("catchAll bad path", () => {
+  it("404: GET response with array of category objects", () => {
+    return request(app)
+      .get("/api/nonexistingpath")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 Path not found!!!");
+      });
+  });
+});
+
 describe("getCategories(", () => {
   it("200: GET response with array of category objects", () => {
     return request(app)
       .get("/api/categories")
       .then(({ body }) => {
-        expect(body).toHaveLength(4);
-        expect(body).toBeInstanceOf(Array);
-        body.forEach((singleObject) => {
+        const bodyCategory = body.category;
+        expect(bodyCategory).toHaveLength(4);
+        expect(bodyCategory).toBeInstanceOf(Array);
+        bodyCategory.forEach((singleObject) => {
           expect(singleObject).toHaveProperty("slug", expect.any(String));
           expect(singleObject).toHaveProperty(
             "description",
@@ -35,17 +47,27 @@ describe("getReviewById()", () => {
     return request(app)
       .get("/api/reviews/7")
       .then(({ body }) => {
-        expect(Object.keys(body)).toHaveLength(9);
-        expect(body).toBeInstanceOf(Object);
-        expect(body).toHaveProperty("review_id", expect.any(Number));
-        expect(body).toHaveProperty("title", expect.any(String));
-        expect(body).toHaveProperty("review_body", expect.any(String));
-        expect(body).toHaveProperty("designer", expect.any(String));
-        expect(body).toHaveProperty("review_img_url", expect.any(String));
-        expect(body).toHaveProperty("votes", expect.any(Number));
-        expect(body).toHaveProperty("category", expect.any(String));
-        expect(body).toHaveProperty("owner", expect.any(String));
-        expect(body).toHaveProperty("created_at", expect.any(String));
+        const bodyReview = body.review;
+        expect(Object.keys(bodyReview)).toHaveLength(9);
+        expect(bodyReview).toBeInstanceOf(Object);
+        expect(bodyReview).toHaveProperty("review_id", 7);
+        expect(bodyReview).toHaveProperty(
+          "title",
+          "Mollit elit qui incididunt veniam occaecat cupidatat"
+        );
+        expect(bodyReview).toHaveProperty(
+          "review_body",
+          "Consectetur incididunt aliquip sunt officia. Magna ex nulla consectetur laboris incididunt ea non qui. Enim id eiusmod irure dolor ipsum in tempor consequat amet ullamco. Occaecat fugiat sint fugiat mollit consequat pariatur consequat non exercitation dolore. Labore occaecat in magna commodo anim enim eiusmod eu pariatur ad duis magna. Voluptate ad et dolore ullamco anim sunt do. Qui exercitation tempor in in minim ullamco fugiat ipsum. Duis irure voluptate cupidatat do id mollit veniam culpa. Velit deserunt exercitation amet laborum nostrud dolore in occaecat minim amet nostrud sunt in. Veniam ut aliqua incididunt commodo sint in anim duis id commodo voluptate sit quis."
+        );
+        expect(bodyReview).toHaveProperty("designer", "Avery Wunzboogerz");
+        expect(bodyReview).toHaveProperty(
+          "review_img_url",
+          "https://images.pexels.com/photos/776657/pexels-photo-776657.jpeg?w=700&h=700"
+        );
+        expect(bodyReview).toHaveProperty("votes", 9);
+        expect(bodyReview).toHaveProperty("category", "social deduction");
+        expect(bodyReview).toHaveProperty("owner", "mallionaire");
+        expect(bodyReview).toHaveProperty("created_at", expect.any(String));
       });
   });
 
