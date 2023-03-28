@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 const { getCategories } = require("./controllers/categories.controller");
-const { getReviewById } = require("./controllers/reviews.controller");
+const {
+  getReviewById,
+  getReviews,
+} = require("./controllers/reviews.controller");
 const {
   handlePSQL400s,
   handleCustomErrors,
@@ -11,6 +14,8 @@ const {
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
+
+app.get("/api/reviews", getReviews);
 
 app.get("/api/reviews/:review_id", getReviewById);
 

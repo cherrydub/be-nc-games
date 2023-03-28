@@ -89,3 +89,33 @@ describe("getReviewById()", () => {
       });
   });
 });
+
+describe("getReviews()", () => {
+  it("200: GET response with array of review objects", () => {
+    return request(app)
+      .get("/api/reviews")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(13);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        bodyReviews.forEach((singleObject) => {
+          expect(singleObject).toHaveProperty("owner", expect.any(String));
+          expect(singleObject).toHaveProperty("title", expect.any(String));
+          expect(singleObject).toHaveProperty("review_id", expect.any(Number));
+          expect(singleObject).toHaveProperty("category", expect.any(String));
+          expect(singleObject).toHaveProperty(
+            "review_img_url",
+            expect.any(String)
+          );
+          expect(singleObject).toHaveProperty("created_at", expect.any(String));
+          expect(singleObject).toHaveProperty("votes", expect.any(Number));
+          expect(singleObject).toHaveProperty("designer", expect.any(String));
+          expect(singleObject).toHaveProperty(
+            "comment_count",
+            expect.any(String)
+          );
+          expect(Object.keys(singleObject)).toHaveLength(9);
+        });
+      });
+  });
+});
