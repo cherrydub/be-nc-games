@@ -19,10 +19,6 @@ exports.fetchReviewsById = (id) => {
 
 exports.fetchReviews = () => {
   const queryOne = `
-  SELECT * FROM reviews;
-  `;
-
-  const queryThree = `
 
   SELECT reviews.owner, reviews.title, reviews.review_id, reviews.category, reviews.review_img_url, reviews.created_at, reviews.votes, reviews.designer, count(comments.review_id) AS comment_count
   FROM reviews
@@ -31,7 +27,7 @@ exports.fetchReviews = () => {
   GROUP BY reviews.review_id
   ORDER BY reviews.created_at DESC;
 `;
-  return db.query(queryThree).then(({ rows }) => {
+  return db.query(queryOne).then(({ rows }) => {
     return rows;
   });
 };
