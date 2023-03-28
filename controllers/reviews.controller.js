@@ -12,7 +12,7 @@ exports.getReviewById = (req, res, next) => {
     });
 };
 
-exports.getReviews = (req, res, next) => {
+exports.getReviews = (req, res) => {
   fetchReviews().then((allReviews) => {
     res.status(200).send({ reviews: allReviews });
   });
