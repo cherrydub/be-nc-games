@@ -30,7 +30,7 @@ describe("getCategories(", () => {
   });
 });
 
-describe.only("getReviewById()", () => {
+describe("getReviewById()", () => {
   it("200: GET response of review object with 9 keys in Object ", () => {
     return request(app)
       .get("/api/reviews/7")
