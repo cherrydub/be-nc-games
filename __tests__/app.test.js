@@ -151,7 +151,6 @@ describe("getReviewIdComments()", () => {
       .get("/api/reviews/1/comments")
       .then(({ body }) => {
         const bodyComments = body.comments;
-        console.log(bodyComments);
         expect(bodyComments).toHaveLength(0);
         expect(bodyComments).toBeInstanceOf(Array);
       });
