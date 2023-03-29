@@ -45,8 +45,20 @@ exports.fetchReviewIdComments = (id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "404 ID not found" });
+        return checkIdExists(id).then(() => {
+          return rows;
+        });
       }
       return rows;
+    });
+};
+
+const checkIdExists = (review_id) => {
+  return db
+    .query("SELECT * FROM reviews WHERE review_id = $1", [review_id])
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return Promise.reject({ status: 404, msg: "404 ID not found" });
+      }
     });
 };

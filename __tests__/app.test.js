@@ -126,7 +126,6 @@ describe("getReviewIdComments()", () => {
       .get("/api/reviews/2/comments")
       .then(({ body }) => {
         const bodyComments = body.comments;
-        console.log(bodyComments, "body comments<<<");
         expect(bodyComments).toHaveLength(3);
         bodyComments.forEach((singleObject) => {
           expect(singleObject).toHaveProperty("comment_id", expect.any(Number));
@@ -144,6 +143,17 @@ describe("getReviewIdComments()", () => {
           "created_at",
           "2021-01-18T10:24:05.410Z"
         );
+      });
+  });
+
+  it("200: GET empty array where certain correct ID does not have comments ", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .then(({ body }) => {
+        const bodyComments = body.comments;
+        console.log(bodyComments);
+        expect(bodyComments).toHaveLength(0);
+        expect(bodyComments).toBeInstanceOf(Array);
       });
   });
 
