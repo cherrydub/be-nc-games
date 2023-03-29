@@ -4,6 +4,7 @@ const { getCategories } = require("./controllers/categories.controller");
 const {
   getReviewById,
   getReviews,
+  getReviewIdComments,
 } = require("./controllers/reviews.controller");
 const {
   handlePSQL400s,
@@ -18,6 +19,8 @@ app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviews);
 
 app.get("/api/reviews/:review_id", getReviewById);
+
+app.get("/api/reviews/:review_id/comments", getReviewIdComments);
 
 app.use("/*", (req, res) => {
   res.status(404).send({ msg: "404 Path not found!!!" });

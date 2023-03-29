@@ -119,3 +119,49 @@ describe("getReviews()", () => {
       });
   });
 });
+
+describe("getReviewIdComments()", () => {
+  it("200: GET comments from ID 2 ", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .then(({ body }) => {
+        const bodyComments = body.comments;
+        console.log(bodyComments, "body comments<<<");
+        expect(bodyComments).toHaveLength(3);
+        bodyComments.forEach((singleObject) => {
+          expect(singleObject).toHaveProperty("comment_id", expect.any(Number));
+          expect(singleObject).toHaveProperty("votes", expect.any(Number));
+          expect(singleObject).toHaveProperty("created_at", expect.any(String));
+          expect(singleObject).toHaveProperty("author", expect.any(String));
+          expect(singleObject).toHaveProperty("body", expect.any(String));
+          expect(singleObject).toHaveProperty("review_id", expect.any(Number));
+          expect(Object.keys(singleObject)).toHaveLength(6);
+        });
+
+        expect(bodyComments[0]).toHaveProperty("comment_id", 5);
+        expect(bodyComments[0]).toHaveProperty("review_id", 2);
+        expect(bodyComments[0]).toHaveProperty(
+          "created_at",
+          "2021-01-18T10:24:05.410Z"
+        );
+      });
+  });
+
+  it("400: wrong ID format, not valid", () => {
+    return request(app)
+      .get("/api/reviews/notAnId/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request, choose valid ID");
+      });
+  });
+
+  it("404: correct ID format, however ID not within data scope", () => {
+    return request(app)
+      .get("/api/reviews/17/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 ID not found");
+      });
+  });
+});
