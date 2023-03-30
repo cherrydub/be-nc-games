@@ -342,3 +342,21 @@ describe("DELETE: delete comment by commentID ", () => {
       });
   });
 });
+
+describe("GET: getUsers()", () => {
+  it("200: response with array of user objects", () => {
+    return request(app)
+      .get("/api/users")
+      .then(({ body }) => {
+        const bodyUsers = body.users;
+        expect(bodyUsers).toHaveLength(4);
+        expect(bodyUsers).toBeInstanceOf(Array);
+        bodyUsers.forEach((singleObject) => {
+          expect(singleObject).toHaveProperty("username", expect.any(String));
+          expect(singleObject).toHaveProperty("name", expect.any(String));
+          expect(singleObject).toHaveProperty("avatar_url", expect.any(String));
+          expect(Object.keys(singleObject)).toHaveLength(3);
+        });
+      });
+  });
+});
