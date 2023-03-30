@@ -55,7 +55,7 @@ exports.fetchReviewIdComments = (id) => {
 
 const checkIdExists = (review_id) => {
   return db
-    .query("SELECT * FROM reviews WHERE review_id = $1", [review_id])
+    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then((result) => {
       if (result.rowCount === 0) {
         return Promise.reject({ status: 404, msg: "404 ID Not Found" });

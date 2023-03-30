@@ -8,6 +8,7 @@ const {
   postReviewIdComment,
   patchReviewIdVotes,
 } = require("./controllers/reviews.controller");
+const { deleteCommentId } = require("./controllers/comments.controller");
 const {
   handlePSQL400s,
   handleCustomErrors,
@@ -27,6 +28,8 @@ app.get("/api/reviews/:review_id/comments", getReviewIdComments);
 app.post("/api/reviews/:review_id/comments", postReviewIdComment);
 
 app.patch("/api/reviews/:review_id", patchReviewIdVotes);
+
+app.delete("/api/comments/:comment_id", deleteCommentId);
 
 app.use("/*", (req, res) => {
   res.status(404).send({ msg: "404 Path not found!!!" });

@@ -265,7 +265,6 @@ describe("PATCH: patchReviewIdVotes()", () => {
       .send({ inc_votes: 100 })
       .then(({ body }) => {
         const bodyVote = body.review;
-        console.log(bodyVote, "<<<body test");
         expect(Object.keys(bodyVote)).toHaveLength(9);
         expect(bodyVote).toHaveProperty("votes", 101);
       });
@@ -311,6 +310,35 @@ describe("PATCH: patchReviewIdVotes()", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400 Bad Request: psql: 23502");
+      });
+  });
+});
+
+describe("DELETE: delete comment by commentID ", () => {
+  it("204: deletes item and returns no content ", () => {
+    return request(app)
+      .delete("/api/comments/5")
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+
+  it("400: error when wrong ID format", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request, choose valid ID");
+      });
+  });
+
+  it("404: error when ID out of scope", () => {
+    return request(app)
+      .delete("/api/comments/420")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 ID Not Found");
       });
   });
 });
