@@ -183,7 +183,6 @@ describe("POST: postReviewIdComment()", () => {
       .send({ username: "bainesface", body: "lets add this :)" })
       .then(({ body }) => {
         const bodyComment = body.comment;
-        console.log(bodyComment, "body comment <<<");
         expect(Object.keys(bodyComment)).toHaveLength(6);
         expect(bodyComment).toHaveProperty("comment_id", 7);
         expect(bodyComment).toHaveProperty("body", "lets add this :)");
