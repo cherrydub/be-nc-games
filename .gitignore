@@ -2,5 +2,5 @@ node_modules
 .env.*
 playground.sql
 playground6.sql
-task6.txt
-allreviewswithcommentcount.txt
+playground7.sql
+*.txt

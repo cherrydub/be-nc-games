@@ -62,3 +62,25 @@ const checkIdExists = (review_id) => {
       }
     });
 };
+
+//incomplete
+exports.createReviewIdComment = (review_id, postBody) => {
+  console.log(postBody, "postbody models<<<");
+  console.log(postBody.username, "<<models username");
+  return db
+    .query(
+      `
+  INSERT INTO comments
+  (review_id, author, body)
+  VALUES
+  ($1, $2, $3)
+  RETURNING *;
+  `,
+      [review_id, postBody.username, postBody.body]
+    )
+    .then(({ rows }) => {
+      console.log(rows[0], "<<<models");
+      return rows[0];
+    });
+};
+//backup till here
