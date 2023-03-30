@@ -175,8 +175,8 @@ describe("GET: getReviewIdComments()", () => {
   });
 });
 
-describe("postReviewIdComment()", () => {
-  it("POST 201: return posted comment ", () => {
+describe("POST: postReviewIdComment()", () => {
+  it("201: return posted comment ", () => {
     return request(app)
       .post("/api/reviews/1/comments")
       .expect(201)
@@ -190,6 +190,27 @@ describe("postReviewIdComment()", () => {
         expect(bodyComment).toHaveProperty("review_id", 1);
         expect(bodyComment).toHaveProperty("author", "bainesface");
         expect(bodyComment).toHaveProperty("votes", 0);
+      });
+  });
+
+  it("201: return posted comment, ignoring extra fields ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .expect(201)
+      .send({
+        username: "bainesface",
+        body: "lets add this :)",
+        favFood: "pizza",
+      })
+      .then(({ body }) => {
+        const bodyComment = body.comment;
+        expect(Object.keys(bodyComment)).toHaveLength(6);
+        expect(bodyComment).toHaveProperty("comment_id", 7);
+        expect(bodyComment).toHaveProperty("body", "lets add this :)");
+        expect(bodyComment).toHaveProperty("review_id", 1);
+        expect(bodyComment).toHaveProperty("author", "bainesface");
+        expect(bodyComment).toHaveProperty("votes", 0);
+        expect(bodyComment).not.toHaveProperty("favFood");
       });
   });
 
