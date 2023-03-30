@@ -174,3 +174,22 @@ describe("getReviewIdComments()", () => {
       });
   });
 });
+
+describe("postReviewIdComment()", () => {
+  it("201: return posted comment ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .expect(201)
+      .send({ username: "bainesface", body: "👽👽👽" })
+      .then(({ body }) => {
+        const bodyComment = body.comment;
+        console.log(bodyComment, "body comment <<<");
+        expect(Object.keys(bodyComment)).toHaveLength(6);
+        expect(bodyComment).toHaveProperty("comment_id", 7);
+        expect(bodyComment).toHaveProperty("body", "👽👽👽");
+        expect(bodyComment).toHaveProperty("review_id", 1);
+        expect(bodyComment).toHaveProperty("author", "bainesface");
+        expect(bodyComment).toHaveProperty("votes", 0);
+      });
+  });
+});
