@@ -216,13 +216,23 @@ describe("postReviewIdComment()", () => {
       });
   });
 
-  it.only("400: error when wrong ID format", () => {
+  it("400: error when wrong ID format", () => {
     return request(app)
       .post("/api/reviews/notAnId/comments")
       .send({ username: "bainesface", body: "not an ID body" })
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400 Bad Request, choose valid ID");
+      });
+  });
+
+  it("404: review_id out of scope", () => {
+    return request(app)
+      .post("/api/reviews/420/comments")
+      .send({ username: "bainesface", body: "bad review_id" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 Not Found");
       });
   });
 });

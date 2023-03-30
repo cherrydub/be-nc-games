@@ -63,13 +63,7 @@ const checkIdExists = (review_id) => {
     });
 };
 
-//incomplete
 exports.createReviewIdComment = (review_id, postBody) => {
-  // if (Object.keys(postBody) < 2){
-  //   return Promise.reject({status: 400, msg: '400 Incomplete Request'})
-  // }
-  // console.log(postBody, "postbody models<<<");
-  // console.log(postBody.username, "<<models username");
   return db
     .query(
       `
@@ -82,8 +76,6 @@ exports.createReviewIdComment = (review_id, postBody) => {
       [review_id, postBody.username, postBody.body]
     )
     .then(({ rows }) => {
-      // console.log(rows[0], "<<<models");
       return rows[0];
     });
 };
-//backup till here
