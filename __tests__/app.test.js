@@ -256,3 +256,61 @@ describe("POST: postReviewIdComment()", () => {
       });
   });
 });
+
+describe("PATCH: patchReviewIdVotes()", () => {
+  it("201: return updated votes ", () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .expect(201)
+      .send({ inc_votes: 100 })
+      .then(({ body }) => {
+        const bodyVote = body.inc_votes;
+        console.log(bodyVote, "<<<body test");
+        expect(Object.keys(bodyVote)).toHaveLength(9);
+        expect(bodyVote).toHaveProperty("votes", 101);
+      });
+  });
+
+  it("201: return updated object with no extra keys/entries ", () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .expect(201)
+      .send({ inc_votes: 100, favFood: "pizza" })
+      .then(({ body }) => {
+        const bodyVote = body.inc_votes;
+        expect(Object.keys(bodyVote)).toHaveLength(9);
+        expect(bodyVote).toHaveProperty("votes", 101);
+        expect(bodyVote).not.toHaveProperty("favFood");
+      });
+  });
+
+  it("400: error when wrong ID format", () => {
+    return request(app)
+      .patch("/api/reviews/notAnId")
+      .send({ inc_votes: 100 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request, choose valid ID");
+      });
+  });
+
+  it("404: error when ID out of scope", () => {
+    return request(app)
+      .patch("/api/reviews/420")
+      .send({ inc_votes: 100 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 ID Not Found");
+      });
+  });
+
+  it("400: error when send obj is incomplete ", () => {
+    return request(app)
+      .patch("/api/reviews/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request: psql: 23502");
+      });
+  });
+});

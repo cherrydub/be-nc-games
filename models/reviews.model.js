@@ -79,3 +79,24 @@ exports.createReviewIdComment = (review_id, postBody) => {
       return rows[0];
     });
 };
+
+exports.updateReviewVotes = (id, patchBody) => {
+  return db
+    .query(
+      `
+  UPDATE reviews
+  SET votes = votes + $2
+  WHERE review_id = $1
+  RETURNING *;
+  `,
+      [id, patchBody.inc_votes]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return checkIdExists(id).then(() => {
+          return rows;
+        });
+      }
+      return rows[0];
+    });
+};
