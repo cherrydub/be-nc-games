@@ -34,12 +34,10 @@ exports.getReviewIdComments = (req, res, next) => {
       next(err);
     });
 };
-//incomplete
+
 exports.postReviewIdComment = (req, res, next) => {
   const { review_id } = req.params;
-  // console.log(review_id, "this is review id controller");
   const postComment = req.body;
-  // console.log(req.body, "controller req");
 
   createReviewIdComment(review_id, postComment)
     .then((resultData) => {
