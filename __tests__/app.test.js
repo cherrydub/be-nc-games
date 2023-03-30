@@ -264,7 +264,7 @@ describe("PATCH: patchReviewIdVotes()", () => {
       .expect(201)
       .send({ inc_votes: 100 })
       .then(({ body }) => {
-        const bodyVote = body.inc_votes;
+        const bodyVote = body.review;
         console.log(bodyVote, "<<<body test");
         expect(Object.keys(bodyVote)).toHaveLength(9);
         expect(bodyVote).toHaveProperty("votes", 101);
@@ -277,7 +277,7 @@ describe("PATCH: patchReviewIdVotes()", () => {
       .expect(201)
       .send({ inc_votes: 100, favFood: "pizza" })
       .then(({ body }) => {
-        const bodyVote = body.inc_votes;
+        const bodyVote = body.review;
         expect(Object.keys(bodyVote)).toHaveLength(9);
         expect(bodyVote).toHaveProperty("votes", 101);
         expect(bodyVote).not.toHaveProperty("favFood");
