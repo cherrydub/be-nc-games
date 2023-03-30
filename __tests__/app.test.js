@@ -12,8 +12,8 @@ afterAll(() => {
   return db.end();
 });
 
-describe("catchAll bad path", () => {
-  it("404: GET response with array of category objects", () => {
+describe("GET: catchAll bad path", () => {
+  it("GET 404: response with array of category objects", () => {
     return request(app)
       .get("/api/nonexistingpath")
       .expect(404)
@@ -23,8 +23,8 @@ describe("catchAll bad path", () => {
   });
 });
 
-describe("getCategories(", () => {
-  it("200: GET response with array of category objects", () => {
+describe("GET: getCategories(", () => {
+  it("200: response with array of category objects", () => {
     return request(app)
       .get("/api/categories")
       .then(({ body }) => {
@@ -42,8 +42,8 @@ describe("getCategories(", () => {
   });
 });
 
-describe("getReviewById()", () => {
-  it("200: GET response of review object with 9 keys in Object ", () => {
+describe("GET: getReviewById()", () => {
+  it("200: response of review object with 9 keys in Object ", () => {
     return request(app)
       .get("/api/reviews/7")
       .then(({ body }) => {
@@ -85,13 +85,13 @@ describe("getReviewById()", () => {
       .get("/api/reviews/17")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("404 ID not found");
+        expect(body.msg).toBe("404 ID Not Found");
       });
   });
 });
 
-describe("getReviews()", () => {
-  it("200: GET response with array of review objects", () => {
+describe("GET: getReviews()", () => {
+  it("200: response with array of review objects", () => {
     return request(app)
       .get("/api/reviews")
       .then(({ body }) => {
@@ -120,8 +120,8 @@ describe("getReviews()", () => {
   });
 });
 
-describe("getReviewIdComments()", () => {
-  it("200: GET comments from ID 2 ", () => {
+describe("GET: getReviewIdComments()", () => {
+  it("200: comments from ID 2 ", () => {
     return request(app)
       .get("/api/reviews/2/comments")
       .then(({ body }) => {
@@ -146,7 +146,7 @@ describe("getReviewIdComments()", () => {
       });
   });
 
-  it("200: GET empty array where certain correct ID does not have comments ", () => {
+  it("200: empty array where certain correct ID does not have comments ", () => {
     return request(app)
       .get("/api/reviews/1/comments")
       .then(({ body }) => {
@@ -170,26 +170,59 @@ describe("getReviewIdComments()", () => {
       .get("/api/reviews/17/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("404 ID not found");
+        expect(body.msg).toBe("404 ID Not Found");
       });
   });
 });
 
 describe("postReviewIdComment()", () => {
-  it("201: return posted comment ", () => {
+  it("POST 201: return posted comment ", () => {
     return request(app)
       .post("/api/reviews/1/comments")
       .expect(201)
-      .send({ username: "bainesface", body: "👽👽👽" })
+      .send({ username: "bainesface", body: "lets add this :)" })
       .then(({ body }) => {
         const bodyComment = body.comment;
         console.log(bodyComment, "body comment <<<");
         expect(Object.keys(bodyComment)).toHaveLength(6);
         expect(bodyComment).toHaveProperty("comment_id", 7);
-        expect(bodyComment).toHaveProperty("body", "👽👽👽");
+        expect(bodyComment).toHaveProperty("body", "lets add this :)");
         expect(bodyComment).toHaveProperty("review_id", 1);
         expect(bodyComment).toHaveProperty("author", "bainesface");
         expect(bodyComment).toHaveProperty("votes", 0);
+      });
+  });
+
+  it('404: responds with error message when unauthorized user attempt to be added"', () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({
+        username: "cherry",
+        body: "👀👀👀",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("404 Not Found");
+      });
+  });
+
+  it("400: error when send obj is incomplete ", () => {
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send({ username: "bainesface" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request: psql: 23502");
+      });
+  });
+
+  it.only("400: error when wrong ID format", () => {
+    return request(app)
+      .post("/api/reviews/notAnId/comments")
+      .send({ username: "bainesface", body: "not an ID body" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Request, choose valid ID");
       });
   });
 });

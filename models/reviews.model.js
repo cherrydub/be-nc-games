@@ -11,7 +11,7 @@ exports.fetchReviewsById = (id) => {
     )
     .then(({ rows }) => {
       if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "404 ID not found" });
+        return Promise.reject({ status: 404, msg: "404 ID Not Found" });
       }
       return rows[0];
     });
@@ -58,15 +58,18 @@ const checkIdExists = (review_id) => {
     .query("SELECT * FROM reviews WHERE review_id = $1", [review_id])
     .then((result) => {
       if (result.rowCount === 0) {
-        return Promise.reject({ status: 404, msg: "404 ID not found" });
+        return Promise.reject({ status: 404, msg: "404 ID Not Found" });
       }
     });
 };
 
 //incomplete
 exports.createReviewIdComment = (review_id, postBody) => {
-  console.log(postBody, "postbody models<<<");
-  console.log(postBody.username, "<<models username");
+  // if (Object.keys(postBody) < 2){
+  //   return Promise.reject({status: 400, msg: '400 Incomplete Request'})
+  // }
+  // console.log(postBody, "postbody models<<<");
+  // console.log(postBody.username, "<<models username");
   return db
     .query(
       `
@@ -79,7 +82,7 @@ exports.createReviewIdComment = (review_id, postBody) => {
       [review_id, postBody.username, postBody.body]
     )
     .then(({ rows }) => {
-      console.log(rows[0], "<<<models");
+      // console.log(rows[0], "<<<models");
       return rows[0];
     });
 };
