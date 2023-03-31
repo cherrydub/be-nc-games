@@ -17,7 +17,7 @@ exports.getReviewById = (req, res, next) => {
       next(err);
     });
 };
-//backup till here
+
 exports.getReviews = (req, res, next) => {
   const { category, sort_by, order } = req.query;
 
