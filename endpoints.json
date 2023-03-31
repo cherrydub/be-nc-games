@@ -2,6 +2,10 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /": {
+    "description": "serves up info about Readme.md file"
+  },
+
   "GET /api/categories": {
     "description": "serves an array of all categories",
     "queries": [],

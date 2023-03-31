@@ -3,6 +3,7 @@ const app = require("../app");
 const testData = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -465,5 +466,36 @@ describe("GET: getReviews() with queries", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("404 Column Not Found");
       });
+  });
+});
+
+describe("GET /api", () => {
+  it("200: endpoints json object", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(endpoints);
+      });
+  });
+  it("200; Responds with JSON object containing endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty(["GET /api"]);
+        expect(body).toHaveProperty(["GET /api/categories"]);
+        expect(body).toHaveProperty(["GET /api/reviews"]);
+      });
+  });
+  it(" / info about README.md file", () => {
+    expect(endpoints["GET /"].description).toEqual(
+      "serves up info about Readme.md file"
+    );
+  });
+  it("/api endpoints json object", () => {
+    expect(endpoints["GET /api"].description).toEqual(
+      "serves up a json representation of all the available endpoints of the api"
+    );
   });
 });
