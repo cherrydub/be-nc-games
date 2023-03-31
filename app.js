@@ -34,6 +34,9 @@ app.delete("/api/comments/:comment_id", deleteCommentId);
 
 app.get("/api/users", getUsers);
 
+//incomplete
+// app.get("/api/reviews/:review_id/", getReviewIdCommentsCount);
+
 app.use("/*", (req, res) => {
   res.status(404).send({ msg: "404 Path not found!!!" });
 });

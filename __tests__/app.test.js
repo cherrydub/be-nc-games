@@ -43,12 +43,12 @@ describe("GET: getCategories(", () => {
 });
 
 describe("GET: getReviewById()", () => {
-  it("200: response of review object with 9 keys in Object ", () => {
+  it("200: response of review object with 10 (updated for later tasks) keys in Object ", () => {
     return request(app)
       .get("/api/reviews/7")
       .then(({ body }) => {
         const bodyReview = body.review;
-        expect(Object.keys(bodyReview)).toHaveLength(9);
+        expect(Object.keys(bodyReview)).toHaveLength(10);
         expect(bodyReview).toBeInstanceOf(Object);
         expect(bodyReview).toHaveProperty("review_id", 7);
         expect(bodyReview).toHaveProperty(
@@ -68,6 +68,7 @@ describe("GET: getReviewById()", () => {
         expect(bodyReview).toHaveProperty("category", "social deduction");
         expect(bodyReview).toHaveProperty("owner", "mallionaire");
         expect(bodyReview).toHaveProperty("created_at", expect.any(String));
+        expect(bodyReview).toHaveProperty("comment_count", "0");
       });
   });
 
@@ -454,6 +455,15 @@ describe("GET: getReviews() with queries", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400 Bad Order Request");
+      });
+  });
+
+  it("400: error when invalid order input", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=wrongSort")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 Column Not Found");
       });
   });
 });
