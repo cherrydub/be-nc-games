@@ -360,3 +360,100 @@ describe("GET: getUsers()", () => {
       });
   });
 });
+
+describe("GET: getReviews() with queries", () => {
+  it("200: sorted_by:reviews (default DESC)", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=review_id")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(13);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        expect(bodyReviews[0]).toHaveProperty("review_id", 13);
+        expect(bodyReviews.at(-1)).toHaveProperty("review_id", 1);
+      });
+  });
+
+  it("200: category: dexterity", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(1);
+      });
+  });
+
+  it("200: sorted default reviews with order:ASC", () => {
+    return request(app)
+      .get("/api/reviews?order=ASC")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(13);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        expect(bodyReviews[0]).toHaveProperty(
+          "created_at",
+          "1970-01-10T02:08:38.400Z"
+        );
+        expect(bodyReviews.at(-1)).toHaveProperty(
+          "created_at",
+          "2021-01-25T11:16:54.963Z"
+        );
+      });
+  });
+
+  it("200: sorted_by:reviews & order:ASC", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=review_id&order=ASC")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(13);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        expect(bodyReviews[0]).toHaveProperty("review_id", 1);
+        expect(bodyReviews.at(-1)).toHaveProperty("review_id", 13);
+      });
+  });
+
+  it("200: category:dexterity, default order & sort", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(1);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        expect(bodyReviews[0]).toHaveProperty("category", "dexterity");
+      });
+  });
+
+  it("200: category:social deduction, order:ASC, sort_by:vots", () => {
+    return request(app)
+      .get("/api/reviews?category=social%20deduction&sort_by=votes&order=ASC")
+      .then(({ body }) => {
+        const bodyReviews = body.reviews;
+        expect(bodyReviews).toHaveLength(11);
+        expect(bodyReviews).toBeInstanceOf(Array);
+        expect(bodyReviews[0]).toHaveProperty("votes", 5);
+        expect(bodyReviews.at(-1)).toHaveProperty("votes", 100);
+        bodyReviews.forEach((singleObject) => {
+          expect(singleObject).toHaveProperty("category", "social deduction");
+        });
+      });
+  });
+
+  it("404: error when wrong category", () => {
+    return request(app)
+      .get("/api/reviews?category=wrongCategory")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 Category Not Found");
+      });
+  });
+
+  it("400: error when invalid order input", () => {
+    return request(app)
+      .get("/api/reviews?order=wrongOrder")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400 Bad Order Request");
+      });
+  });
+});
