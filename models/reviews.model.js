@@ -23,7 +23,7 @@ exports.fetchReviewsById = (id) => {
       return rows[0];
     });
 };
-//backup till here
+
 const checkCategoryExists = (category) => {
   return db
     .query(`SELECT * FROM reviews WHERE category = $1`, [category])
